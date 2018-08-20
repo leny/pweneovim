@@ -10,6 +10,28 @@ Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'raimondi/delimitmate'
+Plug 'vim-scripts/gitignore'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'terryma/vim-expand-region'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-ultisnips'
+Plug 'ncm2/ncm2-github'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+Plug 'kshenoy/vim-signature'
+Plug 'pgilad/vim-react-proptypes-snippets'
+Plug 'takac/vim-hardtime'
+Plug 'jszakmeister/vim-togglecursor'
+" --- Syntax plugins
+Plug 'sheerun/vim-polyglot'
+Plug 'martinda/Jenkinsfile-vim-syntax'
 call plug#end()
 
 " ---------- Editor configuration
@@ -40,12 +62,18 @@ set ttimeoutlen=0 " cf. https://github.com/wincent/terminus/issues/9#issuecommen
 set scrolloff=4
 set sidescrolloff=5
 set sidescroll=1
+set nopaste
+
+" ---------- tmux/cursor tweak
+
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
 " ---------- Color Scheme
 
 syntax on
 
 colorscheme tomorrow-night-eighties
+set termguicolors
 
 " ---------- Leader configuration
 
@@ -136,6 +164,17 @@ nnoremap Q <Nop>
 
 " --- disable K man command
 nnoremap K <nop>
+
+" --- Fix 'go to mark' behavior with ` as a dead key
+nnoremap ' `<Paste>
+
+" --- misc shortcuts
+nnoremap <leader><leader>! Bi!<esc>
+nnoremap <leader><leader>; A;<esc>
+nnoremap <leader><leader>, A,<esc>
+
+" --- search selected text in visual mode
+vnoremap // y/\V<C-R>"<CR>
 
 " ---------- Splits Configuration
 
@@ -245,10 +284,58 @@ let g:lightline = {
 \ }
 
 " refresh lightline when buffer is saved
-autocmd BufWritePost * call lightline#update()
-autocmd User ALELint call lightline#update()
+augroup Lightline
+    au BufWritePost * call lightline#update()
+    au User ALELint call lightline#update()
+augroup END
 
 " ---------- fzf
 
 nnoremap <c-p> :Files<CR>
 nnoremap <c-b> :Buffers<CR>
+
+" ---------- Region expanding configuration
+
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
+
+" ---------- ncm2
+
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
+
+inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+augroup ncm2
+    au BufEnter  *  call ncm2#enable_for_buffer()
+augroup END
+
+" ---------- UltiSnips
+
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "snips"]
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+
+" ---------- Prettier
+
+let g:prettier#exec_cmd_async = 1
+
+nnoremap gp <Plug>(Prettier)
+
+" ---------- LanguageClient
+
+let g:LanguageClient_serverCommands = {
+  \ 'javascript': ['javascript-typescript-stdio']
+  \ }
+
+" ---------- Hardtime
+
+let g:hardtime_default_on = 1
+let g:list_of_normal_keys = ["h", "j", "k", "l"]
+let g:list_of_visual_keys = ["h", "j", "k", "l"]
+let g:list_of_insert_keys = []
+let g:hardtime_timeout = 500
+let g:hardtime_ignore_quickfix = 1
