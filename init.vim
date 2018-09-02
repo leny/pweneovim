@@ -21,14 +21,17 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'ncm2/ncm2-github'
+Plug 'jsfaint/gen_tags.vim'
+Plug 'ncm2/ncm2-syntax' | Plug 'Shougo/neco-syntax'
+Plug 'ncm2/ncm2-neoinclude' | Plug 'Shougo/neoinclude.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'kshenoy/vim-signature'
 Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
 Plug 'jszakmeister/vim-togglecursor'
+Plug 'mattn/emmet-vim'
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -82,6 +85,7 @@ let mapleader="\<Space>"
 " ---------- Autocommands
 
 augroup Save
+    au!
     au FocusLost * :wa
     au BufLeave * :wa
     au BufWritePre * :%s/\s\+$//e " (Whitespace cleaning)
@@ -112,6 +116,12 @@ augroup PreserveFolding
     au!
     au InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
     au InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+augroup END
+
+" --- Fix for pastemode issue - cf. https://github.com/neovim/neovim/issues/7994
+augroup FixNoPasteIssue
+    au!
+    au InsertLeave * set nopaste
 augroup END
 
 " ---------- Remappings
@@ -285,13 +295,16 @@ let g:lightline = {
 
 " refresh lightline when buffer is saved
 augroup Lightline
+    au!
     au BufWritePost * call lightline#update()
     au User ALELint call lightline#update()
 augroup END
 
 " ---------- fzf
 
-nnoremap <c-p> :Files<CR>
+let g:fzf_layout = { 'down': '~20%' }
+
+nnoremap <c-p> :GFiles<CR>
 nnoremap <c-b> :Buffers<CR>
 
 " ---------- Region expanding configuration
@@ -308,7 +321,8 @@ inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 augroup ncm2
-    au BufEnter  *  call ncm2#enable_for_buffer()
+    au!
+    au BufEnter * call ncm2#enable_for_buffer()
 augroup END
 
 " ---------- UltiSnips
@@ -323,13 +337,11 @@ inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
 
 let g:prettier#exec_cmd_async = 1
 
-nnoremap gp <Plug>(Prettier)
+nnoremap gp :Prettier<CR>
 
-" ---------- LanguageClient
+" ---------- gen_tags.vim
 
-let g:LanguageClient_serverCommands = {
-  \ 'javascript': ['javascript-typescript-stdio']
-  \ }
+let g:loaded_gentags#gtags=1
 
 " ---------- Hardtime
 
