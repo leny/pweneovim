@@ -22,8 +22,8 @@ Plug 'carlitux/deoplete-ternjs'
 Plug 'steelsojka/deoplete-flow'
 Plug 'Shougo/context_filetype.vim'
 Plug 'jsfaint/gen_tags.vim'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'kshenoy/vim-signature'
 Plug 'pgilad/vim-react-proptypes-snippets'
@@ -310,22 +310,20 @@ nnoremap <c-b> :Buffers<CR>
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
 
-" ---------- UltiSnips
+" ---------- neosnippets
 
-let g:UltiSnipsExpandTrigger = "<TAB>"
+let g:neosnippet#snippets_directory = '~/.config/nvim/snips'
 
 " ---------- deoplete
 
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#sources#syntax#min_keyword_length = 2
 
-inoremap pumvisible() ? "<C-n>" : check_back_space() ? "<TAB>" : deoplete#mappings#manual_complete()
+imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : pumvisible() ? "\<C-y>" : "\<CR>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"<Paste>
 
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1] =~ '\s'
-endfunction
-
-call deoplete#custom#var('ultisnips', 'matchers', ['matcher_fuzzy'])
 call deoplete#custom#var('buffer', 'require_same_filetype', v:false)
 
 " ---------- Prettier
