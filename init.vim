@@ -15,15 +15,13 @@ Plug 'raimondi/delimitmate'
 Plug 'vim-scripts/gitignore'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'terryma/vim-expand-region'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'ncm2/ncm2-github'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/neoinclude.vim'
+Plug 'Shougo/neco-syntax'
+Plug 'carlitux/deoplete-ternjs'
+Plug 'steelsojka/deoplete-flow'
+Plug 'Shougo/context_filetype.vim'
 Plug 'jsfaint/gen_tags.vim'
-Plug 'ncm2/ncm2-syntax' | Plug 'Shougo/neco-syntax'
-Plug 'ncm2/ncm2-neoinclude' | Plug 'Shougo/neoinclude.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
@@ -312,26 +310,23 @@ nnoremap <c-b> :Buffers<CR>
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
 
-" ---------- ncm2
-
-set completeopt=noinsert,menuone,noselect
-set shortmess+=c
-
-inoremap <expr> <Down> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <Up> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-augroup ncm2
-    au!
-    au BufEnter * call ncm2#enable_for_buffer()
-augroup END
-
 " ---------- UltiSnips
 
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "snips"]
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsExpandTrigger = "<TAB>"
 
-inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+" ---------- deoplete
+
+let g:deoplete#enable_at_startup = 1
+
+inoremap pumvisible() ? "<C-n>" : check_back_space() ? "<TAB>" : deoplete#mappings#manual_complete()
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~ '\s'
+endfunction
+
+call deoplete#custom#var('ultisnips', 'matchers', ['matcher_fuzzy'])
+call deoplete#custom#var('buffer', 'require_same_filetype', v:false)
 
 " ---------- Prettier
 
