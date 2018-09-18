@@ -73,6 +73,9 @@ let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
 syntax on
 
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+
 colorscheme tomorrow-night-eighties
 set termguicolors
 
@@ -344,3 +347,7 @@ let g:list_of_visual_keys = ["h", "j", "k", "l"]
 let g:list_of_insert_keys = []
 let g:hardtime_timeout = 500
 let g:hardtime_ignore_quickfix = 1
+
+" ---------- debugging syntax highlighting
+
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
