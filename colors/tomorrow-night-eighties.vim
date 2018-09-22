@@ -295,6 +295,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 
 	" PHP Highlighting
 	call <SID>X("phpVarSelector", s:red, "", "")
+	call <SID>X("phpType", s:blue, "", "")
 	call <SID>X("phpKeyword", s:purple, "", "italic")
 	call <SID>X("phpRepeat", s:purple, "", "")
 	call <SID>X("phpConditional", s:purple, "", "")
@@ -345,6 +346,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	" JavaScript Highlighting
 	call <SID>X("jsThis", s:red, "", "italic")
 	call <SID>X("jsSuper", s:orange, "", "italic")
+	call <SID>X("jsReturn", s:purple, "", "")
 	call <SID>X("jsDecorator", s:purple, "", "italic")
 	call <SID>X("jsDecoratorFunction", s:purple, "", "italic")
 	call <SID>X("javaScriptBraces", s:foreground, "", "")
