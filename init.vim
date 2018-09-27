@@ -177,7 +177,7 @@ nnoremap Q <Nop>
 nnoremap K <nop>
 
 " --- Fix 'go to mark' behavior with ` as a dead key
-nnoremap ' `<Paste>
+nnoremap ' `
 
 " --- misc shortcuts
 nnoremap <leader><leader>! Bi!<esc>
@@ -206,7 +206,7 @@ set list
 
 " ---------- Toggle Wrap
 
-nmap <leader>w :set wrap!<CR>
+nmap <leader>W :set wrap!<CR>
 
 " ---------- Copy/paste from system clipboard
 
