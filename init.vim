@@ -184,6 +184,7 @@ nnoremap ' `
 nnoremap <leader><leader>! Bi!<esc>
 nnoremap <leader><leader>; A;<esc>
 nnoremap <leader><leader>, A,<esc>
+nnoremap <leader><leader>. A.<esc>
 
 " --- search selected text in visual mode
 vnoremap // y/\V<C-R>"<CR>
