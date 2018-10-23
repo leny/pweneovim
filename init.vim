@@ -308,6 +308,7 @@ augroup END
 let g:fzf_layout = { 'down': '~20%' }
 
 nnoremap <c-p> :GFiles<CR>
+nnoremap <c-o> :Files<CR>
 nnoremap <c-b> :Buffers<CR>
 
 " ---------- Region expanding configuration
