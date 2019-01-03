@@ -15,12 +15,6 @@ Plug 'raimondi/delimitmate'
 Plug 'vim-scripts/gitignore'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'terryma/vim-expand-region'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neco-syntax'
-Plug 'davidhalter/jedi'
-Plug 'zchee/deoplete-jedi'
-Plug 'carlitux/deoplete-ternjs'
-Plug 'steelsojka/deoplete-flow'
 Plug 'Shougo/context_filetype.vim'
 Plug 'jsfaint/gen_tags.vim'
 Plug 'Shougo/neosnippet.vim'
@@ -31,6 +25,7 @@ Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'mattn/emmet-vim'
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}, 'for': ['javascript, typescript, javascript.react', 'typescript.react', 'tsx', 'jsx', 'python', 'yaml', 'json']}
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -65,6 +60,7 @@ set scrolloff=4
 set sidescrolloff=5
 set sidescroll=1
 set nopaste
+set hlsearch
 
 " ---------- tmux/cursor tweak
 
@@ -92,6 +88,9 @@ augroup Save
     au BufLeave * :wa
     au BufWritePre * :%s/\s\+$//e " (Whitespace cleaning)
 augroup END
+
+" --- Trigger autoread when changing buffers or coming back to vim in terminal.
+au FocusGained,BufEnter * :silent! !
 
 " --- Highlight cursorline on active buffer
 augroup CursorLine
@@ -320,17 +319,33 @@ vmap <C-v> <Plug>(expand_region_shrink)
 
 let g:neosnippet#snippets_directory = '~/.config/nvim/snips'
 
-" ---------- deoplete
+" ---------- coc
 
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#sources#syntax#min_keyword_length = 2
+" use <tab> for trigger completion and navigate next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
 
-imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : pumvisible() ? "\<C-y>" : "\<CR>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
-call deoplete#custom#var('buffer', 'require_same_filetype', v:false)
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
+
+inoremap <silent><expr> <c-space> coc#refresh()
+imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
 
 " ---------- Prettier
 
