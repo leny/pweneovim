@@ -338,6 +338,13 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> grn <Plug>(coc-rename)
+nmap <silent> gcc <Plug>(coc-codeaction)
+vmap <silent> gcv <Plug>(coc-codeaction-selected)
+nmap <silent> gfi <Plug>(coc-diagnostic-info)
+nmap <silent> gfj <Plug>(coc-diagnostic-next)
+nmap <silent> gfk <Plug>(coc-diagnostic-prev)
+nmap <silent> gff <Plug>(coc-fix-current)
 
 command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
 
