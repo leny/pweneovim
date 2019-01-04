@@ -4,6 +4,7 @@
 " ---------- Plugin configuration
 
 call plug#begin()
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'itchyny/lightline.vim'
@@ -25,7 +26,6 @@ Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'mattn/emmet-vim'
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}, 'for': ['javascript, typescript, javascript.react', 'typescript.react', 'tsx', 'jsx', 'python', 'yaml', 'json']}
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -88,9 +88,6 @@ augroup Save
     au BufLeave * :wa
     au BufWritePre * :%s/\s\+$//e " (Whitespace cleaning)
 augroup END
-
-" --- Trigger autoread when changing buffers or coming back to vim in terminal.
-au FocusGained,BufEnter * :silent! !
 
 " --- Highlight cursorline on active buffer
 augroup CursorLine
