@@ -26,6 +26,7 @@ Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'mattn/emmet-vim'
+Plug 'troydm/zoomwintab.vim'
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -351,6 +352,10 @@ imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
 let g:prettier#exec_cmd_async = 1
 
 nnoremap gp :Prettier<CR>
+
+" ---------- zoomwintab
+
+nnoremap gz :ZoomWinTabToggle<CR>
 
 " ---------- gen_tags.vim
 
