@@ -207,9 +207,16 @@ set list
 
 nmap <leader>W :set wrap!<CR>
 
-" ---------- Copy/paste from system clipboard
+" ---------- Copy/paste behavior
 
-set clipboard+=unnamed
+" map paste, yank and delete to named register so the content
+" will not be overwritten
+nnoremap d "xd
+vnoremap d "xd
+nnoremap y "xy
+vnoremap y "xy
+nnoremap p "xp
+vnoremap p "xp
 
 " ---------- Reload neovim config
 
