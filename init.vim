@@ -20,7 +20,7 @@ Plug 'Shougo/context_filetype.vim'
 Plug 'jsfaint/gen_tags.vim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'branch': 'release/1.x' }
 Plug 'kshenoy/vim-signature'
 Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
