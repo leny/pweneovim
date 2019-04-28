@@ -20,7 +20,7 @@ Plug 'Shougo/context_filetype.vim'
 Plug 'jsfaint/gen_tags.vim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'branch': 'release/1.x' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'branch': 'release/1.x', 'for': [ 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift' ] }
 Plug 'kshenoy/vim-signature'
 Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
@@ -121,6 +121,13 @@ augroup END
 augroup FixNoPasteIssue
     au!
     au InsertLeave * set nopaste
+augroup END
+
+" ---------- Svelte files
+
+augroup svelte_filetype
+    au!
+    au BufNewFile,BufRead *.svelte set ft=html
 augroup END
 
 " ---------- Remappings
