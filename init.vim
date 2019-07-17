@@ -30,7 +30,6 @@ Plug 'troydm/zoomwintab.vim'
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
-Plug 'jparise/vim-graphql'
 call plug#end()
 
 " ---------- Editor configuration
