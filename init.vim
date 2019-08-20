@@ -143,6 +143,7 @@ nnoremap <CR> :noh<CR><CR>
 
 " --- Quicker escape mode
 inoremap jj <ESC>
+inoremap jk <ESC>
 inoremap kk <ESC>
 inoremap kj <ESC>
 inoremap ;; ;<ESC>
