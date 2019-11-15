@@ -21,7 +21,7 @@ let s:window = "4d5057"
 hi clear
 syntax reset
 
-let g:colors_name = "Tomorrow-Night-Eighties"
+let g:colors_name = "tomorrow-night-eighties"
 
 if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	" Returns an approximate grey index for the given grey level
@@ -342,6 +342,13 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	call <SID>X("pythonPreCondit", s:purple, "", "")
 	call <SID>X("pythonRepeat", s:aqua, "", "")
 	call <SID>X("pythonExClass", s:orange, "", "")
+
+    " Typescript Highlighting
+	call <SID>X("typescriptImport", s:blue, "", "italic")
+	call <SID>X("typescriptExport", s:blue, "", "italic")
+	call <SID>X("typescriptStatementKeyword", s:purple, "", "")
+	call <SID>X("typescriptNull", s:blue, "", "")
+	call <SID>X("typescriptVariable", s:blue, "", "")
 
 	" JavaScript Highlighting
 	call <SID>X("jsThis", s:red, "", "italic")
