@@ -20,13 +20,14 @@ Plug 'Shougo/context_filetype.vim'
 Plug 'jsfaint/gen_tags.vim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'branch': 'release/1.x', 'for': [ 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': [ 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
 Plug 'kshenoy/vim-signature'
 Plug 'pgilad/vim-react-proptypes-snippets'
 Plug 'takac/vim-hardtime'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'mattn/emmet-vim'
 Plug 'troydm/zoomwintab.vim'
+Plug 'wakatime/vim-wakatime'
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
