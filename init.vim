@@ -27,7 +27,6 @@ Plug 'takac/vim-hardtime'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'mattn/emmet-vim'
 Plug 'troydm/zoomwintab.vim'
-Plug 'wakatime/vim-wakatime'
 " --- Syntax plugins
 Plug 'sheerun/vim-polyglot'
 Plug 'martinda/Jenkinsfile-vim-syntax'
