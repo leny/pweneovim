@@ -55,6 +55,8 @@ Plug 'nvim-lualine/lualine.nvim'
 
 Plug 'mileszs/ack.vim'
 
+Plug 'windwp/nvim-autopairs'
+
 call plug#end()
 
 " ---------- Editor configuration
@@ -455,3 +457,9 @@ require('lualine').setup {
     },
 }
 END
+
+" ---------- Autopairs
+
+lua << EOF
+require("nvim-autopairs").setup {}
+EOF
