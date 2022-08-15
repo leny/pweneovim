@@ -32,6 +32,8 @@ Plug 'rafamadriz/friendly-snippets'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+Plug 'folke/trouble.nvim'
+
 " --- Telescope
 " - needs brew install ripgrep
 " - needs brew install fd
@@ -291,8 +293,15 @@ require('lspconfig').tsserver.setup {}
 require('lspconfig').eslint.setup{}
 require('lspconfig').graphql.setup{}
 
-
 require('luasnip.loaders.from_vscode').lazy_load()
+
+EOF
+
+let g:lsp_diagnostics_echo_cursor = 1
+
+" ---------- CMP Configuration
+
+lua << EOF
 
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
@@ -385,7 +394,7 @@ cmp.setup({
 
 EOF
 
-" ---------- LSP Configuration
+" ---------- Treesitter Configuration
 
 lua <<EOF
 
@@ -463,3 +472,25 @@ END
 lua << EOF
 require("nvim-autopairs").setup {}
 EOF
+
+" ---------- Trouble
+
+lua << EOF
+require("trouble").setup {
+  icons = false,
+  fold_open = "v",
+  fold_closed = ">",
+  indent_lines = false,
+  signs = {
+      error = '●', 
+      warning = '◇', 
+      information = '†', 
+      hint = '‡',
+  },
+  use_diagnostic_signs = false,
+  auto_preview = false,
+}
+EOF
+
+nnoremap gt :TroubleToggle document_diagnostics<CR>
+nnoremap gr :TroubleToggle workspace_diagnostics<CR>
