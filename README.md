@@ -12,8 +12,10 @@
 
 Launch the following commands:
 
-    pip3 install --user --upgrade neovim
+    brew install neovim
 	cd && git clone https://github.com/leny/pweneovim ~/.pweneovim
-	ln -sfv ~/.pweneovim ~/.config/nvim
-	curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	nvim +PlugInstall +CocInstall coc-neosnippet coc-json coc-tsserver coc-html coc-css coc-yaml coc-highlight coc-emmet  +qall
+	ln -sfv ~/.pweneovim ~/.config/nvim	
+	brew install ripgrep
+	brew install fd
+	npm install -g typescript typescript-language-server vscode-langservers-extracted graphql-language-service-cli
+	nvim +PlugInstall +qall

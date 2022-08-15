@@ -1,38 +1,66 @@
 " leny/pweneovim - init.vim (vimrc) file
 " started at 20/08/2018
+" started at 15/08/2022
 
-" ---------- Plugin configuration
+" ---------- Plugins installations
+
+" -------------------- Plugin system checking
+
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" -------------------- Plugins
 
 call plug#begin()
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-Plug 'mileszs/ack.vim'
-Plug 'w0rp/ale'
-Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-surround'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'raimondi/delimitmate'
-Plug 'vim-scripts/gitignore'
+
+" --- LSP
+Plug 'neovim/nvim-lspconfig'
+" --- CMP
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
+
+" --- Snippets
+Plug 'rafamadriz/friendly-snippets'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+" --- Telescope
+" - needs brew install ripgrep
+" - needs brew install fd
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+
 Plug 'editorconfig/editorconfig-vim'
+
 Plug 'terryma/vim-expand-region'
-Plug 'Shougo/context_filetype.vim'
-Plug 'jsfaint/gen_tags.vim'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': [ 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
-Plug 'kshenoy/vim-signature'
-Plug 'pgilad/vim-react-proptypes-snippets'
-Plug 'takac/vim-hardtime'
-Plug 'jszakmeister/vim-togglecursor'
-Plug 'mattn/emmet-vim'
+
 Plug 'troydm/zoomwintab.vim'
-" --- Syntax plugins
-Plug 'sheerun/vim-polyglot'
-Plug 'martinda/Jenkinsfile-vim-syntax'
+
+Plug 'mattn/emmet-vim'
+
+Plug 'airblade/vim-gitgutter'
+
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': [ 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
+
+Plug 'nvim-lualine/lualine.nvim'
+
+Plug 'mileszs/ack.vim'
+
 call plug#end()
 
 " ---------- Editor configuration
+
+set encoding=utf-8
+set fileencodings=utf-8
 
 set nobackup
 set noswapfile
@@ -65,7 +93,7 @@ set hlsearch
 
 " ---------- tmux/cursor tweak
 
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+" let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1 " (apparently ignored)
 
 " ---------- Color Scheme
 
@@ -121,13 +149,6 @@ augroup END
 augroup FixNoPasteIssue
     au!
     au InsertLeave * set nopaste
-augroup END
-
-" ---------- Svelte files
-
-augroup svelte_filetype
-    au!
-    au BufNewFile,BufRead *.svelte set ft=html
 augroup END
 
 " ---------- Remappings
@@ -236,131 +257,175 @@ nmap <Leader>s :source ~/.config/nvim/init.vim
 
 let g:ackprg='ag --vimgrep'
 
-" ---------- ALE
+" ---------- LSP Configuration
 
-let g:ale_sign_error = '●'
-highlight ALEErrorSign guifg=#f2777a
-highlight SpellBad guisp=#f2777a
-let g:ale_sign_warning = '◇'
-highlight ALEWarningSign guifg=#ffcc66
-highlight SpellCap guisp=#ffcc66
+" ! needs npm install -g typescript typescript-language-server
+" ! needs npm i -g vscode-langservers-extracted
+" ! needs npm install -g graphql-language-service-cli
 
-function! LinterStatus() abort
-    let l:counts = ale#statusline#Count(winbufnr('$'))
+lua << EOF
 
-    if l:counts.total == 0
-        return '✓'
-    endif
+local lsp_defaults = {
+  flags = {
+    debounce_text_changes = 150,
+  },
+  capabilities = require('cmp_nvim_lsp').update_capabilities(
+    vim.lsp.protocol.make_client_capabilities()
+  ),
+  on_attach = function(client, bufnr)
+    vim.api.nvim_exec_autocmds('User', {pattern = 'LspAttached'})
+  end
+}
 
-    let l:errors = l:counts.error + l:counts.style_error
-    let l:warnings = l:counts.total - l:errors
+local lspconfig = require('lspconfig')
 
-    if l:errors > 0 && l:warnings > 0
-        return '◇ ●'
-    endif
+lspconfig.util.default_config = vim.tbl_deep_extend(
+  'force',
+  lspconfig.util.default_config,
+  lsp_defaults
+)
 
-    if l:errors > 0
-        return '●'
-    endif
+require('lspconfig').tsserver.setup {}
+require('lspconfig').eslint.setup{}
+require('lspconfig').graphql.setup{}
 
-    if l:warnings > 0
-        return '◇'
-    endif
-endfunction
 
-" ---------- Lightline
+require('luasnip.loaders.from_vscode').lazy_load()
 
-let g:lightline = {
-    \ 'active': {
-        \ 'left': [
-            \ [ 'mode', 'paste' ],
-            \ [ 'readonly', 'filename', 'modified' ]
-        \ ],
-        \ 'right': [
-            \ [ 'lineinfo' ],
-            \ [ 'ale' ],
-            \ [ 'filetype' ],
-        \ ]
-    \ },
-    \ 'inactive': {
-        \ 'left': [
-            \ [ 'filename', 'modified' ]
-        \ ],
-        \ 'right': [
-            \ [ 'ale' ]
-        \ ]
-    \ },
-    \ 'component_function' : {
-        \ 'ale': 'LinterStatus'
-    \ },
-    \ 'separator': {
-        \ 'left': '',
-        \ 'right': ''
-    \ },
-    \ 'subseparator': {
-        \ 'left': '|',
-        \ 'right': '|'
-    \ }
-\ }
+vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
-" refresh lightline when buffer is saved
-augroup Lightline
-    au!
-    au BufWritePost * call lightline#update()
-    au User ALELint call lightline#update()
-augroup END
+require('luasnip.loaders.from_vscode').lazy_load()
 
-" ---------- fzf
+local cmp = require('cmp')
+local luasnip = require('luasnip')
 
-let g:fzf_layout = { 'down': '~20%' }
+local select_opts = {behavior = cmp.SelectBehavior.Select}
 
-nnoremap <c-p> :GFiles<CR>
-nnoremap <c-o> :Files<CR>
-nnoremap <c-b> :Buffers<CR>
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end
+  },
+  sources = {
+    {name = 'path'},
+    {name = 'nvim_lsp', keyword_length = 3},
+    {name = 'buffer', keyword_length = 3},
+    {name = 'luasnip', keyword_length = 2},
+  },
+  window = {
+    documentation = cmp.config.window.bordered()
+  },
+  formatting = {
+    fields = {'menu', 'abbr', 'kind'},
+    format = function(entry, item)
+      local menu_icon = {
+        nvim_lsp = 'λ',
+        luasnip = '⋗',
+        buffer = 'Ω',
+        path = '🖫',
+      }
 
-" ---------- Region expanding configuration
+      item.menu = menu_icon[entry.source.name]
+      return item
+    end,
+  },
+  mapping = {
+    ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
+    ['<Down>'] = cmp.mapping.select_next_item(select_opts),
+
+    ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
+    ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
+
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({select = true}),
+
+    ['<C-d>'] = cmp.mapping(function(fallback)
+      if luasnip.jumpable(1) then
+        luasnip.jump(1)
+      else
+        fallback()
+      end
+    end, {'i', 's'}),
+
+    ['<C-b>'] = cmp.mapping(function(fallback)
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, {'i', 's'}),
+
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      local col = vim.fn.col('.') - 1
+
+      if cmp.visible() then
+        cmp.select_next_item(select_opts)
+      elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        fallback()
+      else
+        cmp.complete()
+      end
+    end, {'i', 's'}),
+
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item(select_opts)
+      else
+        fallback()
+      end
+    end, {'i', 's'}),
+  },
+})
+
+EOF
+
+" ---------- LSP Configuration
+
+lua <<EOF
+
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "all",
+  sync_install = false,
+  auto_install = true,
+
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+}
+
+EOF
+
+" ---------- Telescope Configuration
+
+lua <<EOF
+require('telescope').load_extension('file_browser')
+require('telescope').setup {
+    extensions = {
+        file_browser = {
+            hijack_netrw = true,
+            dir_icon = "",
+        }
+    }
+}
+EOF
+
+nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
+nnoremap <c-o> <cmd>lua require('telescope').extensions.file_browser.file_browser()<cr>
+nnoremap <c-b> <cmd>lua require('telescope.builtin').buffers()<cr>
+
+" ---------- expand region
 
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
 
-" ---------- neosnippets
+" ---------- zoomwintab
 
-let g:neosnippet#snippets_directory = '~/.config/nvim/snips'
-
-" ---------- coc
-
-" use <tab> for trigger completion and navigate next complete item
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-" Use `[c` and `]c` for navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> grn <Plug>(coc-rename)
-nmap <silent> gcc <Plug>(coc-codeaction)
-vmap <silent> gcv <Plug>(coc-codeaction-selected)
-nmap <silent> gfi <Plug>(coc-diagnostic-info)
-nmap <silent> gfj <Plug>(coc-diagnostic-next)
-nmap <silent> gfk <Plug>(coc-diagnostic-prev)
-nmap <silent> gff <Plug>(coc-fix-current)
-
-command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
-
-inoremap <silent><expr> <c-space> coc#refresh()
-imap <silent> <C-x><C-o> <Plug>(coc-complete-custom)
+nnoremap gz :ZoomWinTabToggle<CR>
 
 " ---------- Prettier
 
@@ -368,23 +433,25 @@ let g:prettier#exec_cmd_async = 1
 
 nnoremap gp :Prettier<CR>
 
-" ---------- zoomwintab
+" ---------- LuaLine
 
-nnoremap gz :ZoomWinTabToggle<CR>
-
-" ---------- gen_tags.vim
-
-let g:loaded_gentags#gtags=1
-
-" ---------- Hardtime
-
-let g:hardtime_default_on = 1
-let g:list_of_normal_keys = ["h", "j", "k", "l"]
-let g:list_of_visual_keys = ["h", "j", "k", "l"]
-let g:list_of_insert_keys = []
-let g:hardtime_timeout = 500
-let g:hardtime_ignore_quickfix = 1
-
-" ---------- debugging syntax highlighting
-
-map gsy :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+lua << END
+require('lualine').setup {
+    options = { section_separators = '', component_separators = '' },
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {
+            {
+                'diagnostics',
+                sections = { 'error', 'warn' },
+                symbols = {error = '●', warn = '◇', info = '†', hint = '‡'},
+                always_visible = true,
+            }
+        },
+        lualine_c = {'filename'},
+        lualine_x = {'encoding'},
+        lualine_y = {'filetype'},
+        lualine_z = {'location'}
+    },
+}
+END
