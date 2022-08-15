@@ -59,6 +59,8 @@ Plug 'mileszs/ack.vim'
 
 Plug 'windwp/nvim-autopairs'
 
+Plug 'tpope/vim-surround'
+
 call plug#end()
 
 " ---------- Editor configuration
