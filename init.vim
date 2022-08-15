@@ -61,6 +61,8 @@ Plug 'windwp/nvim-autopairs'
 
 Plug 'tpope/vim-surround'
 
+Plug 'takac/vim-hardtime'
+
 call plug#end()
 
 " ---------- Editor configuration
@@ -301,6 +303,8 @@ EOF
 
 let g:lsp_diagnostics_echo_cursor = 1
 
+nnoremap gh <cmd>lua vim.lsp.buf.hover()<cr>
+
 " ---------- CMP Configuration
 
 lua << EOF
@@ -496,3 +500,12 @@ EOF
 
 nnoremap gt :TroubleToggle document_diagnostics<CR>
 nnoremap gr :TroubleToggle workspace_diagnostics<CR>
+
+" ---------- Hardtime
+
+let g:hardtime_default_on = 1
+let g:list_of_normal_keys = ["h", "j", "k", "l"]
+let g:list_of_visual_keys = ["h", "j", "k", "l"]
+let g:list_of_insert_keys = []
+let g:hardtime_timeout = 500
+let g:hardtime_ignore_quickfix = 1
