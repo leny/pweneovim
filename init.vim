@@ -63,6 +63,8 @@ Plug 'tpope/vim-surround'
 
 Plug 'takac/vim-hardtime'
 
+Plug 'chentoast/marks.nvim'
+
 call plug#end()
 
 " ---------- Editor configuration
@@ -316,7 +318,7 @@ require('luasnip.loaders.from_vscode').lazy_load()
 local cmp = require('cmp')
 local luasnip = require('luasnip')
 
-local select_opts = {behavior = cmp.SelectBehavior.Select}
+local select_opts = {behavior = cmp.SelectBehavior.Insert}
 
 cmp.setup({
   snippet = {
