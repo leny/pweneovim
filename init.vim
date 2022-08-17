@@ -436,6 +436,8 @@ EOF
 nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
 nnoremap <c-o> <cmd>lua require('telescope').extensions.file_browser.file_browser()<cr>
 nnoremap <c-b> <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <c-t> <cmd>lua require('telescope.builtin').diagnostics()<cr>
+nnoremap <c-g> <cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>
 
 " ---------- expand region
 
