@@ -65,6 +65,8 @@ Plug 'takac/vim-hardtime'
 
 Plug 'chentoast/marks.nvim'
 
+Plug 'tpope/vim-eunuch'
+
 call plug#end()
 
 " ---------- Editor configuration
