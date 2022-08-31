@@ -315,47 +315,18 @@ nnoremap gh <cmd>lua vim.lsp.buf.hover()<cr>
 " ---------- Rust LSP
 
 lua <<EOF
-local opts = {
-  -- rust-tools options
-  tools = {
-    autoSetHints = true,
-    hover_with_actions = true,
-    inlay_hints = {
-      show_parameter_hints = true,
-      parameter_hints_prefix = "",
-      other_hints_prefix = "",
-      },
-    },
+local rt = require("rust-tools")
 
-  -- all the opts to send to nvim-lspconfig
-  -- these override the defaults set by rust-tools.nvim
-  -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-  -- https://rust-analyzer.github.io/manual.html#features
+rt.setup({
   server = {
-    settings = {
-      ["rust-analyzer"] = {
-        assist = {
-          importEnforceGranularity = true,
-          importPrefix = "crate"
-          },
-        cargo = {
-          allFeatures = true
-          },
-        checkOnSave = {
-          -- default: `cargo check`
-          command = "clippy"
-          },
-        },
-        inlayHints = {
-          lifetimeElisionHints = {
-            enable = true,
-            useParameterNames = true
-          },
-        },
-      }
-    },
-}
-require('rust-tools').setup(opts)
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<Leader>g", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+  },
+})
 EOF
 
 " ---------- CMP Configuration
@@ -505,11 +476,12 @@ vmap <C-v> <Plug>(expand_region_shrink)
 
 nnoremap gz :ZoomWinTabToggle<CR>
 
-" ---------- Prettier
+" ---------- Prettier & autoformat
 
 let g:prettier#exec_cmd_async = 1
 
-nnoremap gp :Prettier<CR>
+autocmd FileType javascript,typescript,css,scss,markdown,php,html nnoremap <buffer> gp :Prettier<CR>
+autocmd FileType rust nnoremap <buffer> gp <cmd>lua vim.lsp.buf.formatting()<cr>
 
 " ---------- LuaLine
 
@@ -549,9 +521,9 @@ require("trouble").setup {
   fold_closed = ">",
   indent_lines = false,
   signs = {
-      error = '●', 
-      warning = '◇', 
-      information = '†', 
+      error = '●',
+      warning = '◇',
+      information = '†',
       hint = '‡',
   },
   use_diagnostic_signs = false,
