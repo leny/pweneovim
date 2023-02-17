@@ -54,7 +54,7 @@ Plug 'mattn/emmet-vim'
 
 Plug 'airblade/vim-gitgutter'
 
-Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': [ 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': [ 'javascript', 'typescript', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
 
 Plug 'nvim-lualine/lualine.nvim'
 
@@ -479,8 +479,9 @@ nnoremap gz :ZoomWinTabToggle<CR>
 
 let g:prettier#exec_cmd_async = 1
 
-autocmd FileType javascript,typescript,css,scss,markdown,php,html nnoremap <buffer> gp :Prettier<CR>
+autocmd FileType javascript,typescript,typescript.tsx,typescriptreact,json,css,scss,markdown,php,html nnoremap <buffer> gp :Prettier<CR>
 autocmd FileType rust nnoremap <buffer> gp <cmd>lua vim.lsp.buf.formatting()<cr>
+autocmd BufNewFile,BufRead *.tsx :set filetype=typescript.tsx
 
 " ---------- LuaLine
 
