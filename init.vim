@@ -421,7 +421,7 @@ cmp.setup({
       end
     end, {'i', 's'}),
 
-    ["<C-j>"] = cmp.mapping(function(fallback)
+    ["<Right>"] = cmp.mapping(function(fallback)
       cmp.mapping.abort()
       local copilot_keys = vim.fn["copilot#Accept"]()
       if copilot_keys ~= "" then
