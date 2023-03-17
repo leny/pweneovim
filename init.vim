@@ -70,6 +70,9 @@ Plug 'chentoast/marks.nvim'
 
 Plug 'tpope/vim-eunuch'
 
+" - github copilot
+Plug 'github/copilot.vim'
+
 call plug#end()
 
 " ---------- Editor configuration
@@ -417,6 +420,16 @@ cmp.setup({
         fallback()
       end
     end, {'i', 's'}),
+
+    ["<C-j>"] = cmp.mapping(function(fallback)
+      cmp.mapping.abort()
+      local copilot_keys = vim.fn["copilot#Accept"]()
+      if copilot_keys ~= "" then
+        vim.api.nvim_feedkeys(copilot_keys, "i", true)
+      else
+        fallback()
+      end
+    end, {'i', 's'}),
   },
 })
 
@@ -542,3 +555,9 @@ let g:list_of_visual_keys = ["h", "j", "k", "l"]
 let g:list_of_insert_keys = []
 let g:hardtime_timeout = 500
 let g:hardtime_ignore_quickfix = 1
+
+" ---------- GitHub Copilot
+
+let g:copilot_no_tab_map = 1
+let g:copilot_assume_mapped = 1
+let g:copilot_tab_fallback = ""
