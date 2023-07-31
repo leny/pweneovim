@@ -312,6 +312,7 @@ EOF
 let g:lsp_diagnostics_echo_cursor = 1
 
 nnoremap gh <cmd>lua vim.lsp.buf.hover()<cr>
+nnoremap gd <cmd>lua vim.lsp.buf.definition()<cr>
 
 " ---------- Rust LSP
 
