@@ -70,6 +70,8 @@ Plug 'chentoast/marks.nvim'
 
 Plug 'tpope/vim-eunuch'
 
+Plug 'wuelnerdotexe/vim-astro'
+
 " - github copilot
 Plug 'github/copilot.vim'
 
