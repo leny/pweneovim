@@ -1,6 +1,6 @@
 " leny/pweneovim - init.vim (vimrc) file
-" started at 20/08/2018
-" started at 15/08/2022
+" started at 20/08/2018 (vim)
+" refactored at 15/08/2022 (neovim)
 
 " ---------- Plugins installations
 
@@ -32,9 +32,7 @@ Plug 'simrat39/rust-tools.nvim'
 
 " --- Snippets
 Plug 'rafamadriz/friendly-snippets'
-
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
 Plug 'folke/trouble.nvim'
 
 " --- Telescope
