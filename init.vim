@@ -44,6 +44,8 @@ Plug 'nvim-telescope/telescope-file-browser.nvim'
 
 Plug 'editorconfig/editorconfig-vim'
 
+Plug 'kshenoy/vim-signature'
+
 Plug 'terryma/vim-expand-region'
 
 Plug 'troydm/zoomwintab.vim'
