@@ -329,7 +329,12 @@ require('lspconfig').lua_ls.setup {
     settings = {
         Lua = {
             diagnostics = {
-                globals = {'vim', 'require','love'},
+                globals = {'vim', 'require', 'love'},
+            },
+            workspace = {
+                library = {
+                    "${3rd}/love2d/library"
+                },
             },
         },
     },
@@ -521,6 +526,7 @@ autocmd BufNewFile,BufRead *.tsx :set filetype=typescript.tsx
 autocmd FileType rust nnoremap <buffer> gp <cmd>lua vim.lsp.buf.format { async = true }<cr>
 
 autocmd FileType lua nnoremap <buffer> gp <cmd>lua require("stylua").format()<cr>
+autocmd FileType lua nnoremap <buffer> g<cr> <cmd>:!love src<cr>
 
 " ---------- LuaLine
 
