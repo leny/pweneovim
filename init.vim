@@ -56,6 +56,8 @@ Plug 'airblade/vim-gitgutter'
 
 Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': [ 'javascript', 'typescript', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift', 'yaml' ] }
 
+Plug 'wesleimp/stylua.nvim'
+
 Plug 'nvim-lualine/lualine.nvim'
 
 Plug 'mileszs/ack.vim'
@@ -316,6 +318,25 @@ let g:lsp_diagnostics_echo_cursor = 1
 nnoremap gh <cmd>lua vim.lsp.buf.hover()<cr>
 nnoremap gd <cmd>lua vim.lsp.buf.definition()<cr>
 
+" ---------- Lua LSP
+
+" ! needs brew install lua-language-server
+" --- most of my lua scripts are using love2d, so I need to add love2d globals
+
+lua << EOF
+
+require('lspconfig').lua_ls.setup {
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = {'vim', 'require','love'},
+            },
+        },
+    },
+}
+
+EOF
+
 " ---------- Rust LSP
 
 lua <<EOF
@@ -491,13 +512,15 @@ vmap <C-v> <Plug>(expand_region_shrink)
 
 nnoremap gz :ZoomWinTabToggle<CR>
 
-" ---------- Prettier & autoformat
+" ---------- Autoformat with Prettier, LSP or other
 
 let g:prettier#exec_cmd_async = 1
 
 autocmd FileType javascript,typescript,typescript.tsx,typescriptreact,json,css,scss,markdown,php,html nnoremap <buffer> gp :Prettier<CR>
-autocmd FileType rust nnoremap <buffer> gp <cmd>lua vim.lsp.buf.formatting()<cr>
 autocmd BufNewFile,BufRead *.tsx :set filetype=typescript.tsx
+autocmd FileType rust nnoremap <buffer> gp <cmd>lua vim.lsp.buf.format { async = true }<cr>
+
+autocmd FileType lua nnoremap <buffer> gp <cmd>lua require("stylua").format()<cr>
 
 " ---------- LuaLine
 
