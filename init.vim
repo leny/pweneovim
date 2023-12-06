@@ -133,6 +133,14 @@ let mapleader="\<Space>"
 
 " ---------- Autocommands
 
+" --- Create folders if they don't exist on save
+" cf. https://vi.stackexchange.com/a/679
+augroup AutoMkdir
+    au!
+    au BufWritePre * :silent! call mkdir(expand('<afile>:p:h'), 'p')
+augroup END
+
+" --- Save on focus lost
 augroup Save
     au!
     au FocusLost * :wa
@@ -286,7 +294,6 @@ let g:ackprg='ag --vimgrep'
 " ! needs npm install -g graphql-language-service-cli
 
 lua << EOF
-
 local lsp_defaults = {
   flags = {
     debounce_text_changes = 150,
@@ -324,7 +331,6 @@ nnoremap gd <cmd>lua vim.lsp.buf.definition()<cr>
 " --- most of my lua scripts are using love2d, so I need to add love2d globals
 
 lua << EOF
-
 require('lspconfig').lua_ls.setup {
     settings = {
         Lua = {
@@ -362,7 +368,6 @@ EOF
 " ---------- CMP Configuration
 
 lua << EOF
-
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
 require('luasnip.loaders.from_vscode').lazy_load()
