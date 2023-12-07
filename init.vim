@@ -133,7 +133,7 @@ let mapleader="\<Space>"
 
 " ---------- Autocommands
 
-" --- Create folders if they don't exist on save
+" --- Create folders if they don't exist on save - I'm not sure about the interaction with the next augroup
 " cf. https://vi.stackexchange.com/a/679
 augroup AutoMkdir
     au!
