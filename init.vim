@@ -18,6 +18,7 @@ call plug#begin()
 
 " --- LSP
 Plug 'neovim/nvim-lspconfig'
+
 " --- CMP
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
@@ -521,6 +522,10 @@ vmap <C-v> <Plug>(expand_region_shrink)
 " ---------- zoomwintab
 
 nnoremap gz :ZoomWinTabToggle<CR>
+
+" ---------- switch tabs
+
+nnoremap gn :tabnext<CR>
 
 " ---------- Autoformat with Prettier, LSP or other
 
