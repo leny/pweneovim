@@ -75,6 +75,8 @@ Plug 'tpope/vim-eunuch'
 
 Plug 'wuelnerdotexe/vim-astro'
 
+Plug 'f-person/git-blame.nvim'
+
 " - github copilot
 Plug 'github/copilot.vim'
 
