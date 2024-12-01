@@ -608,6 +608,15 @@ let g:copilot_no_tab_map = 1
 let g:copilot_assume_mapped = 1
 let g:copilot_tab_fallback = ""
 
+" ---------- GitBlame
+
+lua << EOF
+require('gitblame').setup {
+     --Note how the `gitblame_` prefix is omitted in `setup`
+    enabled = false,
+}
+EOF
+
 " ---------- Substitute
 lua << EOF
 require("substitute").setup()
