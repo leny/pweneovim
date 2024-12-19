@@ -43,7 +43,7 @@ Plug 'folke/trouble.nvim'
 " - needs brew install ripgrep
 " - needs brew install fd
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 
 Plug 'editorconfig/editorconfig-vim'
@@ -81,6 +81,8 @@ Plug 'wuelnerdotexe/vim-astro'
 Plug 'f-person/git-blame.nvim'
 
 Plug 'gbprod/substitute.nvim'
+
+Plug 'AckslD/nvim-neoclip.lua'
 
 " --- Codecompanion
 Plug 'github/copilot.vim'
@@ -321,7 +323,7 @@ lspconfig.util.default_config = vim.tbl_deep_extend(
   lsp_defaults
 )
 
-require('lspconfig').tsserver.setup {}
+require('lspconfig').ts_ls.setup {}
 require('lspconfig').eslint.setup{}
 require('lspconfig').graphql.setup{}
 
@@ -521,6 +523,7 @@ nnoremap <c-b> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <c-t> <cmd>lua require('telescope.builtin').diagnostics()<cr>
 nnoremap <c-g> <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <c-a> <cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>
+nnoremap <c-y> <cmd>lua require('telescope').extensions.neoclip.default()<cr>
 
 " ---------- expand region
 
@@ -673,6 +676,12 @@ vim.keymap.set("n", "s", require('substitute').operator, { noremap = true })
 vim.keymap.set("n", "ss", require('substitute').line, { noremap = true })
 vim.keymap.set("n", "S", require('substitute').eol, { noremap = true })
 vim.keymap.set("x", "s", require('substitute').visual, { noremap = true })
+EOF
+
+" ---------- Neoclip
+
+lua << EOF
+require('neoclip').setup()
 EOF
 
 " ---------- CodeCompanion
