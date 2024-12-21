@@ -640,7 +640,6 @@ EOF
 
 lua << EOF
 require("trouble").setup {
-  icons = false,
   fold_open = "v",
   fold_closed = ">",
   indent_lines = false,
@@ -655,8 +654,8 @@ require("trouble").setup {
 }
 EOF
 
-nnoremap gt :TroubleToggle document_diagnostics<CR>
-nnoremap gr :TroubleToggle workspace_diagnostics<CR>
+nnoremap gr :Trouble diagnostics toggle<CR>
+nnoremap gt :Trouble diagnostics toggle filter.buf=0<CR>
 
 " ---------- Hardtime
 
