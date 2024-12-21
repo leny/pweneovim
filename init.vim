@@ -323,9 +323,17 @@ lspconfig.util.default_config = vim.tbl_deep_extend(
   lsp_defaults
 )
 
-require('lspconfig').ts_ls.setup {}
-require('lspconfig').eslint.setup{}
-require('lspconfig').graphql.setup{}
+require('lspconfig').denols.setup {
+    on_attach = on_attach,
+    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+}
+require('lspconfig').ts_ls.setup {
+    on_attach = on_attach,
+    root_dir = lspconfig.util.root_pattern("tsconfig.json", "package.json"),
+    single_file_support = false,
+}
+require('lspconfig').eslint.setup {}
+require('lspconfig').graphql.setup {}
 
 require('luasnip.loaders.from_vscode').lazy_load()
 
