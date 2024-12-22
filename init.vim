@@ -42,7 +42,6 @@ Plug 'folke/trouble.nvim'
 " --- Telescope
 " - needs brew install ripgrep
 " - needs brew install fd
-Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 
