@@ -69,8 +69,6 @@ Plug 'windwp/nvim-autopairs'
 
 Plug 'tpope/vim-surround'
 
-Plug 'takac/vim-hardtime'
-
 Plug 'chentoast/marks.nvim'
 
 Plug 'tpope/vim-eunuch'
@@ -655,15 +653,6 @@ EOF
 
 nnoremap gr :Trouble diagnostics toggle<CR>
 nnoremap gt :Trouble diagnostics toggle filter.buf=0<CR>
-
-" ---------- Hardtime
-
-let g:hardtime_default_on = 1
-let g:list_of_normal_keys = ["h", "j", "k", "l"]
-let g:list_of_visual_keys = ["h", "j", "k", "l"]
-let g:list_of_insert_keys = []
-let g:hardtime_timeout = 500
-let g:hardtime_ignore_quickfix = 1
 
 " ---------- GitBlame
 
