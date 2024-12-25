@@ -2,6 +2,9 @@
 " started at 20/08/2018 (vim)
 " refactored at 15/08/2022 (neovim)
 
+" --- TODO
+" - Rewrite the whole thing in lua
+
 " ---------- Plugins installations
 
 " -------------------- Plugin system checking

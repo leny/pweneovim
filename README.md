@@ -7,7 +7,9 @@
 **pweneovim** is an utility repository for my neovim configuration files, separated from my [dotfiles](https://github.com/leny/pwendok) by purpose.
 
 * * *
+
 **neovim version:** `0.10.2`
+
 * * *
 
 ## Install
