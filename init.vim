@@ -708,3 +708,7 @@ require("codecompanion").setup({
     },
 })
 EOF
+
+nnoremap gm :CodeCompanion<CR>
+vnoremap gm :CodeCompanion<CR>
+nnoremap gM :Telescope codecompanion<CR>
