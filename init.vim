@@ -247,11 +247,11 @@ nnoremap K <nop>
 " --- Fix 'go to mark' behavior with ` as a dead key
 nnoremap ' `
 
-" --- misc shortcuts
-nnoremap <leader><leader>! Bi!<esc>
-nnoremap <leader><leader>; A;<esc>
-nnoremap <leader><leader>, A,<esc>
-nnoremap <leader><leader>. A.<esc>
+" --- misc shortcuts with space-space-?
+nnoremap <leader><leader>! Bi!<esc> " Insert ! at the beginning of the current Word
+nnoremap <leader><leader>; A;<esc> " Append ; at the end of the line
+nnoremap <leader><leader>, A,<esc> " Append , at the end of the line
+nnoremap <leader><leader>. A.<esc> " Append . at the end of the line
 
 " --- search selected text in visual mode
 vnoremap // y/\V<C-R>"<CR>
@@ -301,7 +301,7 @@ let g:ackprg='ag --vimgrep'
 " ---------- LSP Configuration
 
 " ! needs npm install -g typescript typescript-language-server
-" ! needs npm i -g vscode-langservers-extracted
+" ! needs npm install -g vscode-langservers-extracted
 " ! needs npm install -g graphql-language-service-cli
 
 lua << EOF
