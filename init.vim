@@ -48,6 +48,9 @@ Plug 'folke/trouble.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 
+" --- Oil
+Plug 'stevearc/oil.nvim'
+
 Plug 'editorconfig/editorconfig-vim'
 
 Plug 'kshenoy/vim-signature'
@@ -712,3 +715,30 @@ EOF
 nnoremap gm :CodeCompanion<CR>
 vnoremap gm :CodeCompanion<CR>
 nnoremap gM :Telescope codecompanion<CR>
+
+" ---------- Oil
+lua << EOF
+require('oil').setup({
+    default_file_explorer = true,
+    use_default_keymaps = false,
+    keymaps = {
+        ["g?"] = { "actions.show_help", mode = "n" },
+        ["<CR>"] = "actions.select",
+        ["<C-p>"] = "actions.preview",
+        ["<C-c>"] = { "actions.close", mode = "n" },
+        ["gs"] = { "actions.change_sort", mode = "n" },
+        ["gx"] = "actions.open_external",
+        ["g."] = { "actions.toggle_hidden", mode = "n" },
+        ["g\\"] = { "actions.toggle_trash", mode = "n" },
+      },
+    view_options = {
+        show_hidden = true,
+        natural_order = 'fast',
+        case_insensitive = false,
+        sort = {
+            { 'type', 'asc' },
+            { 'name', 'asc' },
+        },
+    },
+})
+EOF
