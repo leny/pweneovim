@@ -259,6 +259,11 @@ nnoremap <leader><leader>. A.<esc> " Append . at the end of the line
 " --- search selected text in visual mode
 vnoremap // y/\V<C-R>"<CR>
 
+" --- Jump to next/prev diagnostic
+
+nnoremap [b <cmd>lua vim.diagnostic.goto_prev()<cr>
+nnoremap [n <cmd>lua vim.diagnostic.goto_next()<cr>
+
 " ---------- Splits Configuration
 
 set splitbelow
