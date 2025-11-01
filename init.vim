@@ -516,13 +516,48 @@ EOF
 " ---------- Telescope Configuration
 
 lua <<EOF
+
+local file_ignore_patterns = {
+  "node_modules",
+  ".git/",
+  "%.lock",
+  "%.sqlite3",
+  "%.ipynb",
+  "%.png",
+  "%.jpg",
+  "%.jpeg",
+  "%.otf",
+  "%.ttf",
+  "%.webp",
+  "%.gif",
+  "%.pdf",
+  "%.dmg",
+  "%.zip",
+  "%.tar",
+  "%.gz",
+  "%.rar",
+  "%.7z",
+  "%.mp4",
+  "%.mp3",
+  "%.mov",
+  "%.avi",
+  "%.wmv",
+  "%.flv",
+  "%.mkv",
+  "%.exe",
+  "%.dll",
+  "%.ogg",
+  "%.pxd",
+}
+
 require('telescope').load_extension('file_browser')
 require('telescope').setup {
   defaults = {
     sorting_strategy = "ascending",
     layout_config = {
       prompt_position = "top"
-    }
+    },
+    file_ignore_patterns = file_ignore_patterns,
   },
   extensions = {
       file_browser = {
