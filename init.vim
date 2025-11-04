@@ -48,6 +48,8 @@ Plug 'folke/trouble.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 
+Plug 'ThePrimeagen/harpoon', {'branch': 'harpoon2'}
+
 " --- Oil
 Plug 'stevearc/oil.nvim'
 
@@ -566,6 +568,33 @@ require('telescope').setup {
       }
   }
 }
+
+local harpoon = require('harpoon')
+harpoon:setup({})
+
+-- harpoon config
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+
+-- basic telescope configuration
+local conf = require("telescope.config").values
+local function toggle_telescope(harpoon_files)
+    local file_paths = {}
+    for _, item in ipairs(harpoon_files.items) do
+        table.insert(file_paths, item.value)
+    end
+
+    require("telescope.pickers").new({}, {
+        prompt_title = "Harpoon",
+        finder = require("telescope.finders").new_table({
+            results = file_paths,
+        }),
+        previewer = conf.file_previewer({}),
+        sorter = conf.generic_sorter({}),
+    }):find()
+end
+
+vim.keymap.set("n", "<c-y>", function() toggle_telescope(harpoon:list()) end,
+    { desc = "Open harpoon window" })
 EOF
 
 nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
@@ -574,7 +603,6 @@ nnoremap <c-b> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <c-e> <cmd>lua require('telescope.builtin').diagnostics({bufnr=0})<cr>
 nnoremap <c-g> <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <c-a> <cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>
-nnoremap <c-y> <cmd>lua require('telescope').extensions.neoclip.default()<cr>
 
 " ---------- expand region
 
