@@ -571,7 +571,7 @@ EOF
 nnoremap <c-p> <cmd>lua require('telescope.builtin').git_files()<cr>
 nnoremap <c-o> <cmd>lua require('telescope').extensions.file_browser.file_browser()<cr>
 nnoremap <c-b> <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap <c-t> <cmd>lua require('telescope.builtin').diagnostics()<cr>
+nnoremap <c-e> <cmd>lua require('telescope.builtin').diagnostics({bufnr=0})<cr>
 nnoremap <c-g> <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <c-a> <cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>
 nnoremap <c-y> <cmd>lua require('telescope').extensions.neoclip.default()<cr>
