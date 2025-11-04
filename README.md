@@ -22,4 +22,3 @@ Launch the following commands:
 	brew install ripgrep
 	brew install fd
 	npm install -g typescript typescript-language-server vscode-langservers-extracted graphql-language-service-cli
-	nvim +PlugInstall +qall
