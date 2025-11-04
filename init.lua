@@ -17,6 +17,11 @@ local opt = vim.opt
 local g = vim.g
 local api = vim.api
 
+-- Pre-plugin options
+
+opt.termguicolors = true
+cmd.colorscheme("tomorrow-night-eighties")
+
 -- ------------------------------------------------------------------------
 -- Plugin Management - lazy.nvim bootstrap (replaces vim-plug).
 -- ------------------------------------------------------------------------
@@ -141,12 +146,6 @@ opt.listchars = { trail = "·", tab = "··", eol = "¬", nbsp = "░" }
 opt.list = true
 
 cmd("syntax on")
-
--- opt.t_8f = "\27[38;2;%lu;%lu;%lum"
--- opt.t_8b = "\27[48;2;%lu;%lu;%lum"
-
-cmd.colorscheme("tomorrow-night-eighties")
-opt.termguicolors = true
 
 g.mapleader = " "
 
@@ -442,32 +441,11 @@ vim.lsp.config("*", {
   capabilities = cmp_nvim_lsp.default_capabilities(),
 })
 
-function file_exists(...)
-  local uv = vim.uv or vim.loop
-
-  for _, filepath in ipairs({ ... }) do
-    filepath = table.concat({ vim.fn.getcwd(), filepath }, '/')
-
-    if uv.fs_stat(filepath) ~= nil then return true end
-  end
-
-  return false
-end
-
-function is_deno() return file_exists('deno.json', 'deno.jsonc', 'deno.lock') end 
-
-vim.lsp.config('denols', {
-  root_markers = { 'deno.json', 'deno.jsonc' },
-  enable = is_deno(),
-})
--- vim.lsp.enable('denols')
-
 vim.lsp.config('ts_ls', {
   root_markers = { 'tsconfig.json', 'package.json' },
   single_file_support = false,
-  enable = not is_deno(),
 })
--- vim.lsp.enable('ts_ls')
+vim.lsp.enable('ts_ls')
 
 vim.lsp.config('eslint', {})
 vim.lsp.config('graphql', {})
