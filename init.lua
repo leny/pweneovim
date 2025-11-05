@@ -40,6 +40,11 @@ opt.rtp:prepend(lazypath)
 
 -- Plugin specification mirrors the previous Plug register.
 require("lazy").setup({
+  {
+    "vhyrro/luarocks.nvim",
+    priority = 2000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
+    config = true,
+  },
   { "nvim-lua/plenary.nvim" }, -- Required by multiple Lua plugins.
   { "neovim/nvim-lspconfig" }, -- Core LSP client helpers.
   { "hrsh7th/cmp-nvim-lsp" }, -- lsp -> cmp bridge.
@@ -427,10 +432,12 @@ vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- ------------------------------------------------------------------------
 -- Plugin-specific configuration blocks (ported directly from Vimscript).
 -- ------------------------------------------------------------------------
+
 g.ackprg = "ag --vimgrep"
 g.lsp_diagnostics_echo_cursor = 1
 
 -- ---------- LSP configuration ------------------------------------------------
+
 -- local lspconfig = require("lspconfig")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -479,6 +486,7 @@ rust_tools.setup({
 ]]
 
 -- ---------- Completion configuration (nvim-cmp) ------------------------------
+
 opt.completeopt = { "menu", "menuone", "noselect" }
 
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -580,10 +588,10 @@ cmp.setup({
 
 -- ---------- Treesitter -------------------------------------------------------
 
-vim.api.nvim_create_autocmd("FileType", {
-    callback = function(ev)
-        pcall(vim.treesitter.start, ev.buf)
-    end
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(ev) 
+    pcall(vim.treesitter.start, ev.buf)
+  end,
 })
 
 -- ---------- Telescope + Harpoon ----------------------------------------------
