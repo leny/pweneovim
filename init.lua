@@ -448,42 +448,34 @@ vim.lsp.config("*", {
   capabilities = cmp_nvim_lsp.default_capabilities(),
 })
 
-vim.lsp.config('ts_ls', {
-  root_markers = { 'tsconfig.json', 'package.json' },
-  single_file_support = false,
-})
-vim.lsp.enable('ts_ls')
-
-vim.lsp.config('eslint', {})
-vim.lsp.config('graphql', {})
-
-require("luasnip.loaders.from_vscode").lazy_load()
-
--- Lua language server extra globals (Love2D support).
-vim.lsp.config('lua_ls',{
-  settings = {
+local lsps = {
+    { "ts_ls", {
+      root_markers = { 'tsconfig.json', 'package.json' },
+      single_file_support = false,
+    } },
+    { "cssls" },
+    {"eslint"},
+    {"graphql"},
+    {"html"},
+    -- TODO: copilot? (cf. https://github.com/neovim/nvim-lspconfig/blob/master/lsp/copilot.lua)
+    { "lua_ls", {
+      settings = {
     Lua = {
       diagnostics = {
         globals = { "vim", "require" },
       },
     },
   },
-})
+    } },
+}
 
---[[ Rust tooling helper (mirrors rust-tools block).
-local rust_tools = require("rust-tools")
-rust_tools.setup({
-  server = {
-    on_attach = function(_, bufnr)
-      map("n", "<Leader>g", rust_tools.hover_actions.hover_actions, { buffer = bufnr, desc = "Rust hover actions" })
-      map("n", "<Leader>a", rust_tools.code_action_group.code_action_group, {
-        buffer = bufnr,
-        desc = "Rust code action group",
-      })
-    end,
-  },
-})
-]]
+for _, lsp in pairs(lsps) do
+    local name, config = lsp[1], lsp[2]
+    vim.lsp.enable(name)
+    if config then
+        vim.lsp.config(name, config)
+    end
+end
 
 -- ---------- Completion configuration (nvim-cmp) ------------------------------
 
