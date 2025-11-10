@@ -889,7 +889,7 @@ require("oil").setup({
     use_default_keymaps = false,
     keymaps = {
         ["g?"] = { "actions.show_help", mode = "n" },
-        ["<cr"] = "actions.select",
+        ["<cr>"] = "actions.select",
         ["<c-m>"] = "actions.preview",
         ["<c-c>"] = { "actions.close", mode = "n" },
         ["gs"] = { "actions.change_sort", mode = "n" },
