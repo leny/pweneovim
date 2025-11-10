@@ -6,11 +6,14 @@ This file is the Lua rewrite of the legacy `init.vim`.
 It keeps every original option, mapping, autocommand, and plugin behaviour intact,
 while taking advantage of idiomatic Neovim Lua APIs and a documented structure.
 The goal is parity with the previous configuration, not to introduce behavioural changes.
+
+Also, cf. https://github.com/albingroen/quick.nvim/blob/main/init.lua
 ]]
 
 -- ------------------------------------------------------------------------
 -- Short aliases to make the rest of the configuration easier to read.
 -- ------------------------------------------------------------------------
+
 local fn = vim.fn
 local cmd = vim.cmd
 local opt = vim.opt
@@ -25,6 +28,7 @@ cmd.colorscheme("tomorrow-night-eighties")
 -- ------------------------------------------------------------------------
 -- Plugin Management - lazy.nvim bootstrap (replaces vim-plug).
 -- ------------------------------------------------------------------------
+
 local lazypath = fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   fn.system({
@@ -47,14 +51,18 @@ require("lazy").setup({
   },
   { "nvim-lua/plenary.nvim" }, -- Required by multiple Lua plugins.
   { "neovim/nvim-lspconfig" }, -- Core LSP client helpers.
-  { "hrsh7th/cmp-nvim-lsp" }, -- lsp -> cmp bridge.
-  { "hrsh7th/cmp-nvim-lsp-signature-help" },
-  { "hrsh7th/cmp-buffer" },
-  { "hrsh7th/cmp-path" },
-  { "hrsh7th/cmp-cmdline" },
-  { "hrsh7th/nvim-cmp" },
-  { "L3MON4D3/LuaSnip" },
-  { "saadparwaiz1/cmp_luasnip" },
+  {
+    "hrsh7th/nvim-cmp", -- completion
+    dependencies = {
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+    },
+  },
+
   {
     "simrat39/rust-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
@@ -70,7 +78,6 @@ require("lazy").setup({
   { "kshenoy/vim-signature" },
   { "terryma/vim-expand-region" },
   { "troydm/zoomwintab.vim" },
-  { "mattn/emmet-vim" },
   { "airblade/vim-gitgutter" },
   {
     "prettier/vim-prettier",
@@ -105,6 +112,7 @@ require("lazy").setup({
   { "wuelnerdotexe/vim-astro" },
   { "f-person/git-blame.nvim" },
   { "gbprod/substitute.nvim" },
+  { "mattn/emmet-vim", commit="3fb2f63799e1922f7647ed9ff3b32154031a76ee" },
   { "github/copilot.vim" },
 }, {
   defaults = { lazy = false }, -- Keep the eager loading behaviour of vim-plug.
@@ -115,6 +123,7 @@ require("lazy").setup({
 -- ------------------------------------------------------------------------
 -- Core editor settings (1:1 translation from the original Vimscript `set`)
 -- ------------------------------------------------------------------------
+
 opt.encoding = "utf-8"
 opt.fileencodings = { "utf-8" }
 opt.backup = false
@@ -157,11 +166,13 @@ g.mapleader = " "
 -- ------------------------------------------------------------------------
 -- Custom user commands ported from their Vimscript counterparts.
 -- ------------------------------------------------------------------------
+
 api.nvim_create_user_command("W", "w", { desc = "Quick typo helper for :w" })
 
 -- ------------------------------------------------------------------------
 -- Keymap helpers (all mappings gain descriptions for easier discoverability).
 -- ------------------------------------------------------------------------
+
 local map = vim.keymap.set
 local keymap_opts = { silent = true }
 
@@ -268,6 +279,7 @@ map("n", "gn", "<cmd>tabnext<CR>", vim.tbl_extend("force", keymap_opts, { desc =
 -- ------------------------------------------------------------------------
 -- Autocommands & augroups translated from Vimscript.
 -- ------------------------------------------------------------------------
+
 local augroup = api.nvim_create_augroup
 local autocmd = api.nvim_create_autocmd
 
@@ -457,7 +469,6 @@ local lsps = {
     {"eslint"},
     {"graphql"},
     {"html"},
-    -- TODO: copilot? (cf. https://github.com/neovim/nvim-lspconfig/blob/master/lsp/copilot.lua)
     { "lua_ls", {
       settings = {
     Lua = {
@@ -471,10 +482,10 @@ local lsps = {
 
 for _, lsp in pairs(lsps) do
     local name, config = lsp[1], lsp[2]
-    vim.lsp.enable(name)
     if config then
         vim.lsp.config(name, config)
     end
+    vim.lsp.enable(name)
 end
 
 -- ---------- Completion configuration (nvim-cmp) ------------------------------
@@ -574,7 +585,7 @@ cmp.setup({
       else
         fallback()
       end
-    end, { "i", "s" }),
+    end, { "i", "s" }),    
   },
 })
 
@@ -587,6 +598,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- ---------- Telescope + Harpoon ----------------------------------------------
+
 local telescope = require("telescope")
 telescope.setup({
   defaults = {
@@ -695,6 +707,7 @@ map("x", "v", "<Plug>(expand_region_expand)", { desc = "Expand selection", silen
 map("x", "<C-v>", "<Plug>(expand_region_shrink)", { desc = "Shrink selection", silent = true })
 
 -- ---------- LuaLine ----------------------------------------------------------
+
 require("lualine").setup({
   options = { section_separators = "", component_separators = "" },
   sections = {
@@ -763,6 +776,7 @@ package.loaded["lualine.components.codecompanion_indicator"] = LualineCodeCompan
 require("nvim-autopairs").setup({})
 
 -- ---------- Trouble ----------------------------------------------------------
+
 require("trouble").setup({
   fold_open = "v",
   fold_closed = ">",
@@ -778,11 +792,13 @@ require("trouble").setup({
 })
 
 -- ---------- Git blame --------------------------------------------------------
+
 require("gitblame").setup({
   enabled = false,
 })
 
 -- ---------- Substitute -------------------------------------------------------
+
 require("substitute").setup()
 
 map("n", "s", require("substitute").operator, { noremap = true, desc = "Substitute operator" })
@@ -791,14 +807,14 @@ map("n", "S", require("substitute").eol, { noremap = true, desc = "Substitute to
 map("x", "s", require("substitute").visual, { noremap = true, desc = "Substitute selection" })
 
 -- ---------- Oil ----------------------------------------------------------------
+
 require("oil").setup({
-  default_file_explorer = true,
   use_default_keymaps = false,
   keymaps = {
     ["g?"] = { "actions.show_help", mode = "n" },
-    ["<CR>"] = "actions.select",
-    ["<C-p>"] = "actions.preview",
-    ["<C-c>"] = { "actions.close", mode = "n" },
+    ["<cr"] = "actions.select",
+    ["<c-m>"] = "actions.preview",
+    ["<c-c>"] = { "actions.close", mode = "n" },
     ["gs"] = { "actions.change_sort", mode = "n" },
     ["gx"] = "actions.open_external",
     ["g."] = { "actions.toggle_hidden", mode = "n" },
