@@ -69,6 +69,25 @@ require("lazy").setup({
     },
     { "rafamadriz/friendly-snippets" },
     { "nvim-treesitter/nvim-treesitter", lazy = false, branch = "main", build = ":TSUpdate" },
+    {
+        'nvimdev/lspsaga.nvim',
+        config = function()
+            require('lspsaga').setup({
+                symbol_in_winbar = {
+                    enable = false,
+                },
+                beacon = {
+                    enable = false,
+                },
+                lightbulb = {
+                    enable = false,
+                },
+            })
+        end,
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',        
+        }
+    },
     { "folke/trouble.nvim" },
     { "nvim-telescope/telescope.nvim" },
     { "nvim-telescope/telescope-file-browser.nvim" },
@@ -287,16 +306,12 @@ map(
     })
 )
 
-map("n", "gm", "<cmd>CodeCompanion<CR>", vim.tbl_extend("force", keymap_opts, { desc = "Open CodeCompanion" }))
-map("x", "gm", "<cmd>CodeCompanion<CR>", vim.tbl_extend("force", keymap_opts, { desc = "Open CodeCompanion (visual)" }))
-map(
-    "n",
-    "gM",
-    "<cmd>Telescope codecompanion<CR>",
-    vim.tbl_extend("force", keymap_opts, {
-        desc = "Search CodeCompanion actions",
-    })
-)
+map("n", "gm", "<cmd>lua vim.lsp.buf.code_action()<CR>", vim.tbl_extend("force", keymap_opts, {
+        desc = "Toggle Code Actions from LSP",
+    }))
+map("", "gm", "<cmd>lua vim.lsp.buf.code_action()<CR>", vim.tbl_extend("force", keymap_opts, {
+        desc = "Toggle Code Actions from LSP",
+    }))
 
 map("n", "gz", "<cmd>ZoomWinTabToggle<CR>", vim.tbl_extend("force", keymap_opts, { desc = "Toggle window zoom" }))
 map("n", "gn", "<cmd>tabnext<CR>", vim.tbl_extend("force", keymap_opts, { desc = "Go to next tab" }))
@@ -798,55 +813,12 @@ require("lualine").setup({
             },
         },
         lualine_c = { "filename" },
+
         lualine_x = { "encoding" },
         lualine_y = { "filetype" },
         lualine_z = { "location" },
     },
 })
-
--- Spinner component for CodeCompanion requests (mirrors inline Lua chunk).
-local LualineCodeCompanionIndicator = require("lualine.component"):extend()
-LualineCodeCompanionIndicator.processing = false
-LualineCodeCompanionIndicator.spinner_index = 1
-
-local spinner_symbols = {
-    "⠋",
-    "⠙",
-    "⠹",
-    "⠸",
-    "⠼",
-    "⠴",
-    "⠦",
-    "⠧",
-    "⠇",
-    "⠏",
-}
-local spinner_symbols_len = #spinner_symbols
-
-function LualineCodeCompanionIndicator:init(options)
-    LualineCodeCompanionIndicator.super.init(self, options)
-    local group = augroup("CodeCompanionHooks", { clear = true })
-    autocmd("User", {
-        pattern = "CodeCompanionRequest*",
-        group = group,
-        callback = function(request)
-            if request.match == "CodeCompanionRequestStarted" then
-                self.processing = true
-            elseif request.match == "CodeCompanionRequestFinished" then
-                self.processing = false
-            end
-        end,
-    })
-end
-
-function LualineCodeCompanionIndicator:update_status()
-    if self.processing then
-        self.spinner_index = (self.spinner_index % spinner_symbols_len) + 1
-        return spinner_symbols[self.spinner_index]
-    end
-end
-
-package.loaded["lualine.components.codecompanion_indicator"] = LualineCodeCompanionIndicator
 
 -- ---------- Autopairs --------------------------------------------------------
 
