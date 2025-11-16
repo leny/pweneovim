@@ -461,6 +461,40 @@ autocmd("FileType", {
     end,
 })
 
+autocmd("FileType", {
+    pattern = {
+        "javascript",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx",        
+    },
+    callback = function(event)
+        map(
+            "n",
+            "gl",
+            function() 
+                local filepath = vim.fn.expand('%:p')
+                local cmd = string.format('npx eslint --fix --cache %s', vim.fn.shellescape(filepath))
+
+                print('Running eslint...')
+                local output = vim.fn.system(cmd)
+
+                if vim.v.shell_error == 0 then
+                    print('ESLint: fixed!')
+                    vim.cmd('checktime')
+                else
+                    print('ESLint error:')
+                    print(output)
+                end
+            end,
+            vim.tbl_extend("force", keymap_opts, {
+                buffer = event.buf,
+                desc = "ESLint fix current file",
+            })
+        )
+    end,
+})
+
 autocmd({ "BufNewFile", "BufRead" }, {
     pattern = "*.tsx",
     command = "set filetype=typescript.tsx",
@@ -535,6 +569,7 @@ local lsps = {
                 typescript = {
                     suggest = {
                         autoImports = true,
+                        preferTypeOnlyAutoImports = true,
                         includeCompletionsForModuleExports = true,
                     },
                 },
@@ -548,6 +583,8 @@ local lsps = {
             init_options = {
                 preferences = {
                     includePackageJsonAutoImports = "on",
+                    quotePreference = "double",
+                    preferTypeOnlyAutoImports = true,
                 },
             },
         },
