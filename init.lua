@@ -52,6 +52,15 @@ require("lazy").setup({
     { "nvim-lua/plenary.nvim" }, -- Required by multiple Lua plugins.
     { "neovim/nvim-lspconfig" }, -- Core LSP client helpers.
     {
+        "folke/neodev.nvim",
+        opts = {
+            library = {
+                plugins = { "love" },
+                types = true,
+            },
+        },
+    },
+    {
         "hrsh7th/nvim-cmp", -- completion
         dependencies = {
             "L3MON4D3/LuaSnip",
@@ -551,6 +560,19 @@ g.lsp_diagnostics_echo_cursor = 1
 
 -- local lspconfig = require("lspconfig")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
+local lua_workspace_library = api.nvim_get_runtime_file("", true)
+local love_types_path = fn.stdpath("data") .. "/lazy/neodev.nvim/types/love"
+if vim.loop.fs_stat(love_types_path) then
+    table.insert(lua_workspace_library, love_types_path)
+end
+
+local neodev_before_init
+do
+    local ok, neodev_lsp = pcall(require, "neodev.lsp")
+    if ok and type(neodev_lsp) == "table" and neodev_lsp.before_init then
+        neodev_before_init = neodev_lsp.before_init
+    end
+end
 
 vim.lsp.config("*", {
     flags = {
@@ -558,6 +580,33 @@ vim.lsp.config("*", {
     },
     capabilities = cmp_nvim_lsp.default_capabilities(),
 })
+
+local lua_ls_config = {
+    settings = {
+        Lua = {
+            runtime = {
+                version = "LuaJIT",
+            },
+            completion = {
+                callSnippet = "Replace",
+            },
+            diagnostics = {
+                globals = { "vim", "require", "love" },
+            },
+            workspace = {
+                checkThirdParty = false,
+                library = lua_workspace_library,
+            },
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
+}
+
+if neodev_before_init then
+    lua_ls_config.before_init = neodev_before_init
+end
 
 local lsps = {
     {
@@ -593,18 +642,7 @@ local lsps = {
     { "eslint" },
     { "graphql" },
     { "html" },
-    {
-        "lua_ls",
-        {
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { "vim", "require" },
-                    },
-                },
-            },
-        },
-    },
+    { "lua_ls", lua_ls_config },
 }
 
 for _, lsp in pairs(lsps) do
