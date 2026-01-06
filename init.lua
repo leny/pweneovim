@@ -94,7 +94,7 @@ require("lazy").setup({
             })
         end,
         dependencies = {
-            'nvim-treesitter/nvim-treesitter',        
+            'nvim-treesitter/nvim-treesitter',
         }
     },
     { "folke/trouble.nvim" },
@@ -152,40 +152,47 @@ require("lazy").setup({
 -- Core editor settings (1:1 translation from the original Vimscript `set`)
 -- ------------------------------------------------------------------------
 
-opt.encoding = "utf-8"
-opt.fileencodings = { "utf-8" }
-opt.backup = false
-opt.swapfile = false
-opt.history = 250
-opt.hidden = true
-opt.number = true
-opt.tabstop = 4
-opt.softtabstop = 4
-opt.shiftwidth = 4
-opt.expandtab = true
-opt.foldmethod = "syntax"
-opt.ignorecase = true
-opt.smartcase = true
-opt.modelines = 0
-opt.showmatch = true
-opt.nrformats = { "hex", "alpha" }
-opt.wrap = false
-opt.fileformat = "unix"
-opt.fileformats = { "unix", "dos" }
-opt.foldlevel = 250
-opt.showmode = false
-opt.updatetime = 2000
-opt.smartindent = true
-opt.ttimeoutlen = 0 -- cf. https://github.com/wincent/terminus/issues/9#issuecomment-363775121
-opt.scrolloff = 4
-opt.sidescrolloff = 5
-opt.sidescroll = 1
-opt.paste = false
-opt.hlsearch = true
-opt.splitbelow = true
-opt.splitright = true
-opt.listchars = { trail = "·", tab = "··", eol = "¬", nbsp = "░" }
-opt.list = true
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    local opt = vim.opt
+
+    opt.encoding = "utf-8"
+    opt.fileencodings = { "utf-8" }
+    opt.backup = false
+    opt.swapfile = false
+    opt.history = 250
+    opt.hidden = true
+    opt.number = true
+    opt.tabstop = 4
+    opt.softtabstop = 4
+    opt.shiftwidth = 4
+    opt.expandtab = true
+    opt.foldmethod = "syntax"
+    opt.ignorecase = true
+    opt.smartcase = true
+    opt.modelines = 0
+    opt.showmatch = true
+    opt.nrformats = { "hex", "alpha" }
+    opt.wrap = false
+    opt.fileformat = "unix"
+    opt.fileformats = { "unix", "dos" }
+    opt.foldlevel = 250
+    opt.showmode = false
+    opt.updatetime = 2000
+    opt.smartindent = true
+    opt.ttimeoutlen = 0 -- cf. https://github.com/wincent/terminus/issues/9#issuecomment-363775121
+    opt.scrolloff = 4
+    opt.sidescrolloff = 5
+    opt.sidescroll = 1
+    opt.paste = false
+    opt.hlsearch = true
+    opt.splitbelow = true
+    opt.splitright = true
+    opt.listchars = { trail = "·", tab = "··", eol = "¬", nbsp = "░" }
+    opt.list = true
+
+  end,
+})
 
 cmd("syntax on")
 
@@ -475,13 +482,13 @@ autocmd("FileType", {
         "javascript",
         "typescript",
         "typescriptreact",
-        "typescript.tsx",        
+        "typescript.tsx",
     },
     callback = function(event)
         map(
             "n",
             "gl",
-            function() 
+            function()
                 local filepath = vim.fn.expand('%:p')
                 local cmd = string.format('npx eslint --fix --cache %s', vim.fn.shellescape(filepath))
 
