@@ -549,6 +549,35 @@ autocmd("FileType", {
     end,
 })
 
+-- Mirror unnamed yanks to tmux + macOS clipboard, without changing Vim's normal registers.
+autocmd("TextYankPost", {
+  callback = function()
+    local ev = vim.v.event
+    if not ev or ev.operator ~= "y" then return end
+
+    -- Only when you didn't explicitly choose a register (so plugins stay predictable)
+    if ev.regname and ev.regname ~= "" then return end
+
+    -- Optional safety: don't interfere while executing macros
+    if vim.fn.reg_executing() ~= "" then return end
+
+    local text = vim.fn.getreg('"')
+    if text == nil or text == "" then return end
+
+    -- 1) Put it in tmux buffer (keeps tmux workflows nice)
+    if vim.env.TMUX then
+      vim.fn.system("tmux load-buffer -", text)
+    end
+
+    -- 2) Also copy to system clipboard (most reliable on macOS)
+    vim.fn.system("pbcopy", text)
+
+    -- 3) Optional: also populate + and * registers (doesn't touch unnamed/numbered regs)
+    vim.fn.setreg("+", text)
+    vim.fn.setreg("*", text)
+  end,
+})
+
 -- Folds
 
 vim.o.foldenable = true
