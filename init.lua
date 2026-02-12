@@ -11,6 +11,34 @@ Also, cf. https://github.com/albingroen/quick.nvim/blob/main/init.lua
 ]]
 
 -- ------------------------------------------------------------------------
+-- Prepend nvm's default node bin directory to PATH so that LSP servers
+-- installed via npm (typescript-language-server, etc.) are visible.
+-- ------------------------------------------------------------------------
+
+local nvm_dir = vim.env.NVM_DIR or (vim.env.HOME .. "/.nvm")
+local nvm_default_alias = nvm_dir .. "/alias/default"
+local f = io.open(nvm_default_alias, "r")
+if f then
+    local alias = f:read("*l"):gsub("%s+", "")
+    f:close()
+    local versions_dir = nvm_dir .. "/versions/node"
+    local handle = vim.loop.fs_scandir(versions_dir)
+    if handle then
+        local best
+        while true do
+            local name = vim.loop.fs_scandir_next(handle)
+            if not name then break end
+            if name:match("^v" .. alias .. "%.") or name == "v" .. alias then
+                best = name
+            end
+        end
+        if best then
+            vim.env.PATH = versions_dir .. "/" .. best .. "/bin:" .. vim.env.PATH
+        end
+    end
+end
+
+-- ------------------------------------------------------------------------
 -- Short aliases to make the rest of the configuration easier to read.
 -- ------------------------------------------------------------------------
 
