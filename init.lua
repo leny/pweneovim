@@ -960,6 +960,8 @@ require("trouble").setup({
     },
     use_diagnostic_signs = false,
     auto_preview = false,
+    warn_no_results = false,
+    open_no_results = true,
 })
 
 -- ---------- Git blame --------------------------------------------------------
