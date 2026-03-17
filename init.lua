@@ -311,8 +311,9 @@ map("n", "gh", function()
 end, { desc = "LSP hover" })
 
 map("n", "gd", function()
+    vim.cmd("split")
     vim.lsp.buf.definition()
-end, { desc = "LSP go to definition" })
+end, { desc = "LSP go to definition (split)" })
 
 -- Telescope/Harpoon mappings are defined alongside their configuration later.
 
