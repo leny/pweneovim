@@ -530,6 +530,18 @@ autocmd({ "BufNewFile", "BufRead" }, {
 })
 
 autocmd("FileType", {
+    pattern = "markdown",
+    callback = function()
+        local wo = vim.wo
+        wo.wrap = true
+        wo.linebreak = true
+        wo.breakindent = true
+        wo.colorcolumn = "80"
+    end,
+    desc = "Soft-wrap markdown buffers at 80 characters",
+})
+
+autocmd("FileType", {
     pattern = "rust",
     callback = function(event)
         map("n", "gp", function()
