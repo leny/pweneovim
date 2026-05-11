@@ -516,23 +516,37 @@ autocmd("FileType", {
             "n",
             "gl",
             function()
-                local filepath = vim.fn.expand('%:p')
-                local cmd = string.format('npx eslint --fix --cache %s', vim.fn.shellescape(filepath))
-
-                print('Running eslint...')
-                local output = vim.fn.system(cmd)
-
-                if vim.v.shell_error == 0 then
-                    print('ESLint: fixed!')
-                    vim.cmd('checktime')
+                local filepath = vim.fn.expand("%:p")
+                local git_root = vim.fn.systemlist(
+                    "git -C " .. vim.fn.shellescape(vim.fn.expand("%:p:h")) .. " rev-parse --show-toplevel"
+                )[1]
+                if git_root and vim.fn.filereadable(git_root .. "/biome.json") == 1 then
+                    print("Running biome lint...")
+                    local output = vim.fn.system(
+                        "biome check --write " .. vim.fn.shellescape(filepath) .. " 2>&1"
+                    )
+                    if vim.v.shell_error == 0 then
+                        print("Biome lint: fixed!")
+                        vim.cmd("checktime")
+                    else
+                        print("Biome lint error:\n" .. output)
+                    end
                 else
-                    print('ESLint error:')
-                    print(output)
+                    print("Running eslint...")
+                    local output = vim.fn.system(
+                        string.format("npx eslint --fix --cache %s", vim.fn.shellescape(filepath))
+                    )
+                    if vim.v.shell_error == 0 then
+                        print("ESLint: fixed!")
+                        vim.cmd("checktime")
+                    else
+                        print("ESLint error:\n" .. output)
+                    end
                 end
             end,
             vim.tbl_extend("force", keymap_opts, {
                 buffer = event.buf,
-                desc = "ESLint fix current file",
+                desc = "Lint & fix with Biome or ESLint",
             })
         )
     end,
