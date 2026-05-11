@@ -476,10 +476,29 @@ autocmd("FileType", {
         map(
             "n",
             "gp",
-            "<cmd>Prettier<CR>",
+            function()
+                local git_root = vim.fn.systemlist(
+                    "git -C " .. vim.fn.shellescape(vim.fn.expand("%:p:h")) .. " rev-parse --show-toplevel"
+                )[1]
+                if git_root and vim.fn.filereadable(git_root .. "/biome.json") == 1 then
+                    local filepath = vim.fn.expand("%:p")
+                    local lines = vim.api.nvim_buf_get_lines(event.buf, 0, -1, false)
+                    local result = vim.fn.systemlist(
+                        "biome format --stdin-file-path " .. vim.fn.shellescape(filepath) .. " 2>&1",
+                        lines
+                    )
+                    if vim.v.shell_error == 0 then
+                        vim.api.nvim_buf_set_lines(event.buf, 0, -1, false, result)
+                    else
+                        vim.notify("Biome format failed:\n" .. table.concat(result, "\n"), vim.log.levels.ERROR)
+                    end
+                else
+                    vim.cmd("Prettier")
+                end
+            end,
             vim.tbl_extend("force", keymap_opts, {
                 buffer = event.buf,
-                desc = "Format buffer with Prettier",
+                desc = "Format buffer with Biome or Prettier",
             })
         )
     end,
@@ -699,6 +718,7 @@ local lsps = {
     { "graphql" },
     { "html" },
     { "lua_ls", lua_ls_config },
+    { "biome" },
 }
 
 for _, lsp in pairs(lsps) do
