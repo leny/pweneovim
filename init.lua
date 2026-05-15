@@ -464,7 +464,6 @@ autocmd("FileType", {
         "javascript",
         "typescript",
         "typescriptreact",
-        "typescript.tsx",
         "json",
         "css",
         "scss",
@@ -509,7 +508,6 @@ autocmd("FileType", {
         "javascript",
         "typescript",
         "typescriptreact",
-        "typescript.tsx",
     },
     callback = function(event)
         map(
@@ -552,11 +550,6 @@ autocmd("FileType", {
     end,
 })
 
-autocmd({ "BufNewFile", "BufRead" }, {
-    pattern = "*.tsx",
-    command = "set filetype=typescript.tsx",
-    desc = "Force *.tsx buffers to use the TypeScript TSX filetype",
-})
 
 autocmd("FileType", {
     pattern = "markdown",
