@@ -55,11 +55,6 @@ opt.rtp:prepend(lazypath)
 
 -- Plugin specification mirrors the previous Plug register.
 require("lazy").setup({
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 2000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
-        config = true,
-    },
     { "nvim-lua/plenary.nvim" }, -- Required by multiple Lua plugins.
     { "neovim/nvim-lspconfig" }, -- Core LSP client helpers.
     {
@@ -628,8 +623,6 @@ autocmd("TextYankPost", {
 
 vim.o.foldenable = true
 vim.o.foldlevel = 99
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- ------------------------------------------------------------------------
 -- Plugin-specific configuration blocks (ported directly from Vimscript).
@@ -839,9 +832,30 @@ cmp.setup({
 
 -- ---------- Treesitter -------------------------------------------------------
 
+require("nvim-treesitter").setup({
+    ensure_installed = {
+        "bash",
+        "css",
+        "html",
+        "javascript",
+        "json",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "typescript",
+        "tsx",
+        "vim",
+        "vimdoc",
+    },
+})
+
 vim.api.nvim_create_autocmd("FileType", {
     callback = function(ev)
-        pcall(vim.treesitter.start, ev.buf)
+        local ok = pcall(vim.treesitter.start, ev.buf)
+        if ok then
+            vim.wo.foldmethod = "expr"
+            vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        end
     end,
 })
 
